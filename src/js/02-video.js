@@ -2,9 +2,9 @@ import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 import { save, load } from './storage';
 
-const videoEl = document.querySelector('#vimeo-player');
+const videoplayer = document.querySelector('#vimeo-player');
 const LOCALSTORAGE_KEY = 'videoplayer-current-time';
-const player = new Player(videoEl);
+const player = new Player(videoplayer);
 
 function onPlayData(seconds) {
   save(LOCALSTORAGE_KEY, seconds);
