@@ -18,10 +18,11 @@ function onformInput(evt) {
 }
 
 function loadText(evt) {
+  const { message, email } = formRef;
   const saveData = load(LOCALSTORAGE_KEY);
   if (saveData) {
-    formRef.message.value = saveData.message;
-    formRef.email.value = saveData.email;
+    message.value = saveData.message;
+    email.value = saveData.email;
   }
 }
 
