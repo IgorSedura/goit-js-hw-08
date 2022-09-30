@@ -2,36 +2,33 @@ import throttle from 'lodash.throttle';
 import { save, load, remove } from './storage';
 const LOCALSTORAGE_KEY = 'feedback-form-state';
 
-const ref = {
-  form: document.querySelector('.feedback-form'),
-  textarea: document.querySelector('.feedback-form  textarea'),
-};
+const formRef = document.querySelector('.feedback-form');
+const onFormThrottle = throttle(onformInput, 500);
+formRef.addEventListener('input', onFormThrottle);
+formRef.addEventListener('submit', onFormSubmit);
 
-ref.form.addEventListener('submit', onFormSabmit);
-ref.textarea.addEventListener('input', throttle(onTextareaInput, 500));
 loadText();
 
-function onTextareaInput(evt) {
-  const value = evt.target.value;
-  save(LOCALSTORAGE_KEY, value);
-}
+const formData = {};
 
-function onFormSabmit(evt) {
-  evt.preventDefault();
-  evt.currentTarget.reset();
-  remove(LOCALSTORAGE_KEY);
-  console.log('Отправляем форму');
+function onformInput(evt) {
+  const { name, value } = evt.target;
+  formData[name] = value;
+  save(LOCALSTORAGE_KEY, formData);
 }
 
 function loadText(evt) {
   const saveData = load(LOCALSTORAGE_KEY);
   if (saveData) {
-    ref.textarea.value = saveData;
+    formRef.message.value = saveData.message;
+    formRef.email.value = saveData.email;
   }
 }
 
-const formData = {};
-ref.form.addEventListener('input', e => {
-  formData[e.target.name] = e.target.value;
-  console.log(formData);
-});
+function onFormSubmit(evt) {
+  evt.preventDefault();
+  evt.currentTarget.reset();
+  const saveData = load(LOCALSTORAGE_KEY);
+  console.log(saveData);
+  remove(LOCALSTORAGE_KEY);
+}
